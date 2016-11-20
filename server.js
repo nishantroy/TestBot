@@ -6,7 +6,7 @@ var ans = {};
 
 
 
-//app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/public"));
 
 var port = process.env.PORT || 8080;
 var request = require('request');
@@ -32,6 +32,7 @@ app.post('/api/testbot', function(req, res) {
 		var words = msg.split(" ");
 		if (words[0].toLowerCase() == "weather" && words.length > 1) {
 			var loc = words[1].toLowerCase();
+			console.log(loc);
 
 			/*request.post('https://api.groupme.com/v3/bots/post', {
 				form: {
@@ -42,25 +43,24 @@ app.post('/api/testbot', function(req, res) {
 				console.log(err, res);
 			});*/
 
-			var p1 = yw.getSimpleWeather(loc);
-
-			p1.then(function(res){
+			yw.getSimpleWeather(loc).then(function(res) {
 				// console.log(res);
 			    // var date = new Date(res.date);
 			    // date = date.toDateString();
-			    text = "On "  + res.date + "it is " + res.condition + " in " + words[1] + ".\n" 
+			    var out = "On "  + res.date + "it is " + res.condition + " in " + words[1] + ".\n" 
 			    	+ "It is " + res.temperature.value + res.temperature.units + " with a " 
 			    	+ res.wind.value + res.wind.units + " wind.\n" 
 			    	+ "With windchill, it is " + res.windChill.value + res.windChill.units;
-				console.log(text);
+			    console.log("Date: " + res.date + ", temp: " + res.temperature.value);
+				console.log(out);
 
 			    request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
 						bot_id: botID,
 						text: text
 					}
-				}, function (err, res) {
-					console.log(err, res);
+				}, function (err, reason) {
+					console.log(err, reason);
 				});
 			});
 
