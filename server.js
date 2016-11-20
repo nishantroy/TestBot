@@ -29,14 +29,17 @@ app.post('/api/testbot', function(req, res) {
 	
 	var text = "Hello " + name + "! Nice of you to say " + msg;
 
-	request.post('https://api.groupme.com/v3/bots/post', {
-		form: {
-			bot_id: botID,
-			text: text
-		}
-	}, function (err, res) {
-		console.log(err, res);
-	});
+	if (name != 'TestBot') {
+
+		request.post('https://api.groupme.com/v3/bots/post', {
+			form: {
+				bot_id: botID,
+				text: text
+			}
+		}, function (err, res) {
+			console.log(err, res);
+		});
+	}
 
 })
 
