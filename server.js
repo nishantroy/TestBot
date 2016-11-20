@@ -1,6 +1,8 @@
 // grab the packages we need
 var express = require('express');
+var path = require("path");
 var app = express();
+app.use(express.static(__dirname + "/public"));
 var port = process.env.PORT || 8080;
 
 var bodyParser = require('body-parser');
@@ -19,4 +21,4 @@ app.post('/api/users', function(req, res) {
 
 // start the server
 app.listen(port);
-console.log('Server started! At http://localhost:' + port);
+console.log('Server started! At port: ' +  port);
