@@ -46,10 +46,10 @@ app.post('/api/testbot', function(req, res) {
 
 			p1.then(function(res){
 				console.log("Resolved!");
-				console.log(JSON.Stringify(res));
-			    var date = new Date(res.date);
-			    date = date.toDateString();
-			    text = "On "  + date + "it is " + res.condition + " in " + words[1] + ".\n" 
+				// console.log(res);
+			    // var date = new Date(res.date);
+			    // date = date.toDateString();
+			    text = "On "  + res.date + "it is " + res.condition + " in " + words[1] + ".\n" 
 			    	+ "It is " + res.temperature.value + res.temperature.units + " with a " 
 			    	+ res.wind.value + res.wind.units + " wind.\n" 
 			    	+ "With windchill, it is " + res.windChill.value + res.windChill.units;
