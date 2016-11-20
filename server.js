@@ -24,7 +24,6 @@ app.post('/api/testbot', function(req, res) {
 	var body = req.body;
 	var name = body.name;
 	var msg = body.text;
-	console.log("Body: " + body);
 	
 	var text = "Hello " + name + "! Nice of you to say " + msg;
 
@@ -46,6 +45,8 @@ app.post('/api/testbot', function(req, res) {
 			var p1 = yw.getSimpleWeather(loc);
 
 			p1.then(function(res){
+				console.log("Resolved!");
+				console.log(JSON.Stringify(res));
 			    var date = new Date(res.date);
 			    date = date.toDateString();
 			    text = "On "  + date + "it is " + res.condition + " in " + words[1] + ".\n" 
