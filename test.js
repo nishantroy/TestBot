@@ -20,26 +20,28 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({
 	extended: true
 })); // support encoded bodies
-var loc = "atlanta, ga";
+var loc = "delhi";
 
 yw.getSimpleWeather(loc).then(function(res) {
 	console.log(res.weather.temperature.value);
 	var weather = res.weather;
 	var date = new Date(res.date);
-	date = date.toDateString();
-	var out = "On " + date + ", it is " + weather.condition + " in Atlanta" 
+	//date = date.toDateString();
+	var out = "On " + date + ", it is " + weather.condition + " in delhi" 
 	+ ".\n" + "It is " + weather.temperature.value + weather.temperature.units 
 	+ " with a " + weather.wind.value + weather.wind.units + " wind.\n" + "With windchill, it is " 
 	+ weather.windChill.value + weather.windChill.units + ".";
 
-	request.post('https://api.groupme.com/v3/bots/post', {
+	console.log(date);
+
+	/*request.post('https://api.groupme.com/v3/bots/post', {
 		form: {
 			bot_id: botID,
 			text: out
 		}
 	}, function(err, reason) {
 		console.log(err, reason);
-	});
+	});*/
 	
 }).catch(function(err) {
 	console.log(err);

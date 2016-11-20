@@ -32,15 +32,14 @@ app.post('/api/testbot', function(req, res) {
 
 	if (name != 'TestBot') {
 
-		var words = msg.split(" ");
-		if (words[0].toLowerCase() == "weather" && words.length > 1) {
-			var loc = words[1].toLowerCase();
-			console.log(loc);
+		var cmd = msg.split(" ", 1)[0];
+		if (cmd.toLowerCase() == "weather") {
+			var loc = msg.substring(cmd.length).trim();
 
 			request.post('https://api.groupme.com/v3/bots/post', {
 				form: {
 					bot_id: botID,
-					text: "Fetching weather for " + words[1]
+					text: "Fetching weather for " + loc
 				}
 			}, function (err, res) {
 				console.log(err, res);
@@ -50,7 +49,7 @@ app.post('/api/testbot', function(req, res) {
 				var weather = res.weather;
 				var date = new Date(res.date);
 				date = date.toDateString();
-				var out = "On " + date + ", it is " + weather.condition + " in " + words[1] 
+				var out = "On " + date + ", it is " + weather.condition + " in " + loc
 						+ ".\n" + "It is " + weather.temperature.value + weather.temperature.units 
 						+ " with a " + weather.wind.value + weather.wind.units + " wind.\n" 
 						+ "With windchill, it is " + weather.windChill.value + weather.windChill.units + ".";
@@ -80,8 +79,5 @@ app.post('/api/testbot', function(req, res) {
 
 })
 
-// routes will go here
-
-// start the server
 app.listen(port);
 console.log('Server started! At port: ' + port);
