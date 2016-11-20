@@ -33,19 +33,18 @@ app.post('/api/testbot', function(req, res) {
 		if (words[0].toLowerCase() == "weather" && words.length > 1) {
 			var loc = words[1].toLowerCase();
 
-			request.post('https://api.groupme.com/v3/bots/post', {
+			/*request.post('https://api.groupme.com/v3/bots/post', {
 				form: {
 					bot_id: botID,
 					text: "Fetching weather for " + words[1]
 				}
 			}, function (err, res) {
 				console.log(err, res);
-			});
+			});*/
 
 			var p1 = yw.getSimpleWeather(loc);
 
 			p1.then(function(res){
-				console.log("Resolved!");
 				// console.log(res);
 			    // var date = new Date(res.date);
 			    // date = date.toDateString();
@@ -53,6 +52,7 @@ app.post('/api/testbot', function(req, res) {
 			    	+ "It is " + res.temperature.value + res.temperature.units + " with a " 
 			    	+ res.wind.value + res.wind.units + " wind.\n" 
 			    	+ "With windchill, it is " + res.windChill.value + res.windChill.units;
+				console.log(text);
 
 			    request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
