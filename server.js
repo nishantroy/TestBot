@@ -50,7 +50,7 @@ app.post('/api/testbot', function(req, res) {
 				var weather = res.weather;
 				var date = new Date(res.date);
 				date = date.toDateString();
-				var out = "On " + date + ", it is " + weather.condition + " in Atlanta" 
+				var out = "On " + date + ", it is " + weather.condition + " in " + words[1] 
 						+ ".\n" + "It is " + weather.temperature.value + weather.temperature.units 
 						+ " with a " + weather.wind.value + weather.wind.units + " wind.\n" 
 						+ "With windchill, it is " + weather.windChill.value + weather.windChill.units + ".";
