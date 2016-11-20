@@ -33,11 +33,11 @@ app.post('/api/testbot', function(req, res) {
 		var words = msg.split(" ");
 		if (words[0].toLowerCase() == "weather" && words.length > 1) {
 			var loc = words[1].toLowerCase();
-			
+
 			request.post('https://api.groupme.com/v3/bots/post', {
 				form: {
 					bot_id: botID,
-					text: "Fetching weather for " + words[1];
+					text: "Fetching weather for " + words[1]
 				}
 			}, function (err, res) {
 				console.log(err, res);
