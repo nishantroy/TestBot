@@ -31,7 +31,7 @@ app.post('/api/testbot', function(req, res) {
 
 	var text = "Hello " + name + "! Nice of you to say " + msg;
 
-	if (name != 'TestBot') {
+	if (name != 'TestBot' && name != 'GroupMe!') {
 
 		var cmd = msg.split(" ", 1)[0];
 		if (cmd.toLowerCase() == "weather") {
