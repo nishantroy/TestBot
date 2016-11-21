@@ -122,9 +122,11 @@ app.post('/api/testbot', function(req, res) {
 				console.log(err, res);
 			});
 		}
-		res.send("Response in process");
+		// res.send("Response in process");
+		//return;
 	} else {
-		res.send("No response if message is from GroupMe or TestBot");
+		// res.send("No response if message is from GroupMe or TestBot");
+		return;
 	}
 
 })
