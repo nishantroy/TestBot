@@ -122,6 +122,9 @@ app.post('/api/testbot', function(req, res) {
 				console.log(err, res);
 			});
 		}
+		process.exit();
+	} else {
+		process.exit();
 	}
 
 })
