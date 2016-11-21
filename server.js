@@ -47,7 +47,7 @@ app.post('/api/testbot', function(req, res) {
 
 			yw.getSimpleWeather(loc).then(function(res) {
 				var weather = res.weather;
-				var date = new Date(res.date);
+				var date = new Date(res.date.substring(0, res.date.length - 3));
 				date = date.toDateString();
 				var out = "On " + date + ", it is " + weather.condition + " in " + loc
 						+ ".\n" + "It is " + weather.temperature.value + weather.temperature.units 
