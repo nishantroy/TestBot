@@ -90,7 +90,7 @@ app.post('/api/testbot', function(req, res) {
 				    for (var i = 0; i < quotes.length; i++) {
 				    	var quote = quotes[i];
 				    	var qdate = new Date(quote.date).toDateString();
-				    	var qclose = parseInt(quote.close);
+				    	var qclose = parseFloat(quote.close);
 				    	if (i != quote.length - 1) {
 				    		out += "On " + qdate + " closing price was: $" + qclose + "\n";
 				    	} else {
