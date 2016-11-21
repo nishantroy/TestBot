@@ -2,7 +2,8 @@
 var express = require('express');
 var path = require("path");
 var yw = require('weather-yahoo');
-var ans = {};
+var googleFinance = require("google-finance")
+
 
 
 
@@ -62,6 +63,48 @@ app.post('/api/testbot', function(req, res) {
 				}, function(err, reason) {
 					console.log(err, reason);
 				});
+			});
+
+		} else if (cmd.toLowerCase() == 'stock') {
+			var rest = msg.substring(cmd.length).trim().split(" ");
+			var symbol = rest[0].toUpperCase();
+			var from = new Date(rest[1]);
+			var end = new Date();
+
+			googleFinance.historical({
+			  symbol: symbol,
+			  from: from,
+			  to: end
+			}).then(function (quotes) {
+				request.post('https://api.groupme.com/v3/bots/post', {
+					form: {
+						bot_id: botID,
+						text: "Fetching stock prices for " + symbol;
+					}
+				}, function (err, res) {
+					console.log(err, res);
+				});
+
+				var out = "";
+			    for (var i = 0; i < quote.length; i++) {
+			    	var quote = quotes[i];
+			    	var qdate = new Date(quote.date).toDateString();
+			    	var qclose = parseInt(quote.close);
+			    	if (i != quote.length - 1) {
+			    		out += "On " + qdate + " closing price was: $" + qclose + "\n";
+			    	} else {
+			    		out += "On " + qdate + " closing price was: $" + qclose;
+			    	}
+			    }
+			    request.post('https://api.groupme.com/v3/bots/post', {
+					form: {
+						bot_id: botID,
+						text: out;
+					}
+				}, function (err, res) {
+					console.log(err, res);
+				});
+
 			});
 
 		} else {
