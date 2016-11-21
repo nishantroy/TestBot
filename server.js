@@ -79,7 +79,7 @@ app.post('/api/testbot', function(req, res) {
 				request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
 						bot_id: botID,
-						text: "Fetching stock prices for " + symbol;
+						text: "Fetching stock prices for " + symbol
 					}
 				}, function (err, res) {
 					console.log(err, res);
@@ -103,7 +103,7 @@ app.post('/api/testbot', function(req, res) {
 			    request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
 						bot_id: botID,
-						text: out;
+						text: out
 					}
 				}, function (err, res) {
 					console.log(err, res);
