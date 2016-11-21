@@ -86,16 +86,20 @@ app.post('/api/testbot', function(req, res) {
 				});
 
 				var out = "";
-			    for (var i = 0; i < quote.length; i++) {
-			    	var quote = quotes[i];
-			    	var qdate = new Date(quote.date).toDateString();
-			    	var qclose = parseInt(quote.close);
-			    	if (i != quote.length - 1) {
-			    		out += "On " + qdate + " closing price was: $" + qclose + "\n";
-			    	} else {
-			    		out += "On " + qdate + " closing price was: $" + qclose;
-			    	}
-			    }
+				if (quotes.length > 0) {
+				    for (var i = 0; i < quotes.length; i++) {
+				    	var quote = quotes[i];
+				    	var qdate = new Date(quote.date).toDateString();
+				    	var qclose = parseInt(quote.close);
+				    	if (i != quote.length - 1) {
+				    		out += "On " + qdate + " closing price was: $" + qclose + "\n";
+				    	} else {
+				    		out += "On " + qdate + " closing price was: $" + qclose;
+				    	}
+				    }
+				} else {
+					out = "No data found!";
+				}
 			    request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
 						bot_id: botID,
