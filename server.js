@@ -42,7 +42,7 @@ app.post('/api/testbot', function(req, res) {
 					bot_id: botID,
 					text: "Fetching weather for " + loc
 				}
-			}, function (err, res) {
+			}, function(err, res) {
 				console.log(err, res);
 			});
 
@@ -50,10 +50,7 @@ app.post('/api/testbot', function(req, res) {
 				var weather = res.weather;
 				var date = new Date(res.date.substring(0, res.date.length - 3));
 				date = date.toDateString();
-				var out = "On " + date + ", it is " + weather.condition + " in " + loc
-						+ ".\n" + "It is " + weather.temperature.value + weather.temperature.units 
-						+ " with a " + weather.wind.value + weather.wind.units + " wind.\n" 
-						+ "With windchill, it is " + weather.windChill.value + weather.windChill.units + ".";
+				var out = "On " + date + ", it is " + weather.condition + " in " + loc + ".\n" + "It is " + weather.temperature.value + weather.temperature.units + " with a " + weather.wind.value + weather.wind.units + " wind.\n" + "With windchill, it is " + weather.windChill.value + weather.windChill.units + ".";
 
 				request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
@@ -71,41 +68,42 @@ app.post('/api/testbot', function(req, res) {
 			var from = new Date(rest[1]);
 			var end = new Date();
 
+			request.post('https://api.groupme.com/v3/bots/post', {
+				form: {
+					bot_id: botID,
+					text: "Fetching stock prices for " + symbol
+				}
+			}, function(err, res) {
+				console.log(err, res);
+			});
+
 			googleFinance.historical({
-			  symbol: symbol,
-			  from: from,
-			  to: end
-			}).then(function (quotes) {
-				request.post('https://api.groupme.com/v3/bots/post', {
-					form: {
-						bot_id: botID,
-						text: "Fetching stock prices for " + symbol
-					}
-				}, function (err, res) {
-					console.log(err, res);
-				});
+				symbol: symbol,
+				from: from,
+				to: end
+			}).then(function(quotes) {
 
 				var out = "";
 				if (quotes.length > 0) {
-				    for (var i = 0; i < quotes.length; i++) {
-				    	var quote = quotes[i];
-				    	var qdate = new Date(quote.date).toDateString();
-				    	var qclose = parseFloat(quote.close);
-				    	if (i != quote.length - 1) {
-				    		out += "On " + qdate + " closing price was: $" + qclose + "\n";
-				    	} else {
-				    		out += "On " + qdate + " closing price was: $" + qclose;
-				    	}
-				    }
+					for (var i = 0; i < quotes.length; i++) {
+						var quote = quotes[i];
+						var qdate = new Date(quote.date).toDateString();
+						var qclose = parseFloat(quote.close);
+						if (i != quote.length - 1) {
+							out += "On " + qdate + " closing price was: $" + qclose + "\n";
+						} else {
+							out += "On " + qdate + " closing price was: $" + qclose;
+						}
+					}
 				} else {
 					out = "No data found!";
 				}
-			    request.post('https://api.groupme.com/v3/bots/post', {
+				request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
 						bot_id: botID,
 						text: out
 					}
-				}, function (err, res) {
+				}, function(err, res) {
 					console.log(err, res);
 				});
 
