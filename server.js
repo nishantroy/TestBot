@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({
 
 
 app.post('/api/testbot', function(req, res) {
+	console.log("Called now with this body: " + req.body);
 	var body = req.body;
 	var name = body.name;
 	var msg = body.text;
