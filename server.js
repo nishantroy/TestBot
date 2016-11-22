@@ -1,4 +1,5 @@
 // grab the packages we need
+'use strict';
 var express = require('express');
 var path = require("path");
 var yw = require('weather-yahoo');
@@ -43,7 +44,8 @@ app.post('/api/testbot', function(req, res) {
 					bot_id: botID,
 					text: "Fetching weather for " + loc
 				}
-			}, function(err, res) {
+			}, function(err, response) {
+				// res.send("Success");
 				// return res.send("Success");
 			});
 
@@ -58,7 +60,7 @@ app.post('/api/testbot', function(req, res) {
 						bot_id: botID,
 						text: out
 					}
-				}, function(err, res) {
+				}, function(err, response) {
 					// return res.send("Success");
 
 				});
@@ -105,7 +107,7 @@ app.post('/api/testbot', function(req, res) {
 						bot_id: botID,
 						text: out
 					}
-				}, function(err, res) {
+				}, function(err, response) {
 					// return res.send("Success");
 				});
 
@@ -118,9 +120,9 @@ app.post('/api/testbot', function(req, res) {
 					bot_id: botID,
 					text: text
 				}
-			}, function(err, res) {
-				// res.send("Success");
-				return;
+			}, function(err, response) {
+				response.send("Success");
+				// return;
 			});
 		}
 		// res.send("Response in process");
