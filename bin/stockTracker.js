@@ -1,3 +1,5 @@
+#! /app/bin/node
+
 'use strict';
 const express = require('express');
 const path = require("path");
@@ -56,9 +58,14 @@ function trackStocks() {
 				to: end
 			}).then(function(quotes) {
 				quotes = quotes[0];
+				console.log("Symbol: " + quotes.symbol + ", price: " + quotes.close + " threshold: " + threshold);
 
 				if (parseInt(quotes.close) < threshold) {
+					// if (i < stockData.length - 1) {
 					out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold + '\n';
+					// } else {
+					// 	out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold;
+					// }
 				}
 				if (index == stockData.length - 1) {
 					if (out.length == 0) {
@@ -77,27 +84,5 @@ function trackStocks() {
 				}
 			})
 		})
-
-		/*for (var i = 0; i < stockData.length; i++) {
-			var object = stockData[i];
-			var symbol = object.Stock;
-			var threshold = object.Threshold;
-
-
-			googleFinance.historical({
-				symbol: symbol,
-				from: from,
-				to: end
-			}).then(function(quotes) {
-				quotes = quotes[0];
-				if (quotes.close < threshold) {
-					if (i < stockData.length - 1) {
-						out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold + '\n';
-					} else {
-						out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold;
-					}
-				}
-			})
-		}*/
 	})
 }
