@@ -14,6 +14,7 @@ const request = require('request');
 const bodyParser = require('body-parser');
 
 const botID = 'c7f81be0af8cbbbce84ecab26d';
+const async = require('async');
 
 var app = express();
 var db;
@@ -28,11 +29,7 @@ MongoClient.connect(mongodbURL, (err, database) => {
 		return console.log(err)
 	} else {
 		db = database
-			// app.listen(port, () => {
-			// 	console.log('listening on ' + port);
-			// })
 		trackStocks();
-
 	}
 })
 
@@ -50,9 +47,10 @@ function trackStocks() {
 	var cursor = db.collection('tracking').find().toArray(function(err, results) {
 		var stockData = results;
 		var out = '';
-		stockData.forEach(function(stock, index) {
-			var symbol = stock.Stock;
-			var threshold = parseFloat(stock.Threshold);
+
+		async.each(stockData, function(name, callback) {
+			var symbol = name.Stock;
+			var threshold = parseFloat(name.Threshold);
 			googleFinance.historical({
 				symbol: symbol,
 				from: from,
@@ -64,26 +62,31 @@ function trackStocks() {
 				if (parseFloat(quotes.close) < threshold) {
 					// if (i < stockData.length - 1) {
 					out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold + '\n';
+					console.log("Just added: " + quotes.symbol);
 					// } else {
 					// 	out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold;
 					// }
 				}
-				if (index == stockData.length - 1) {
-					if (out.length == 0) {
-						out = 'None of your stocks are below your set thresholds yet!';
-					}
-
-					request.post('https://api.groupme.com/v3/bots/post', {
-						form: {
-							bot_id: botID,
-							text: out
-						}
-					}, function(err, response) {
-						// res.send("Success");
-						return "Success";
-					});
+				callback();
+			});
+		}, function(err) {
+			if (err) {
+				return console.log(err);
+			} else {
+				if (out.length == 0) {
+					out = 'None of your stocks are below your set thresholds yet!';
 				}
-			})
-		})
+
+				request.post('https://api.groupme.com/v3/bots/post', {
+					form: {
+						bot_id: botID,
+						text: out
+					}
+				}, function(err, response) {
+					// res.send("Success");
+					return "Success";
+				});
+			}
+		});
 	})
 }
