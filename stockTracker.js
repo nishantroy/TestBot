@@ -56,29 +56,27 @@ function trackStocks() {
 				to: end
 			}).then(function(quotes) {
 				quotes = quotes[0];
-				if (quotes.close < threshold) {
-					// if (i < stockData.length - 1) {
+
+				if (parseInt(quotes.close) < threshold) {
 					out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold + '\n';
-					// } else {
-					// 	out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold;
-					// }
+				}
+				if (index == stockData.length - 1) {
+					if (out.length == 0) {
+						out = 'None of your stocks are below your set thresholds yet!';
+					}
+
+					request.post('https://api.groupme.com/v3/bots/post', {
+						form: {
+							bot_id: botID,
+							text: out
+						}
+					}, function(err, response) {
+						// res.send("Success");
+						return "Success";
+					});
 				}
 			})
 		})
-
-		if (out.length == 0) {
-			out = 'None of your stocks are below your set thresholds yet!';
-		}
-
-		request.post('https://api.groupme.com/v3/bots/post', {
-			form: {
-				bot_id: botID,
-				text: out
-			}
-		}, function(err, response) {
-			// res.send("Success");
-			return "Success";
-		});
 
 		/*for (var i = 0; i < stockData.length; i++) {
 			var object = stockData[i];
