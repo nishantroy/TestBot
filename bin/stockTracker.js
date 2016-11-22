@@ -16,6 +16,20 @@ const bodyParser = require('body-parser');
 const botID = 'c7f81be0af8cbbbce84ecab26d';
 const async = require('async');
 
+module.exports = {
+	checkMyThresholds: function() {
+		MongoClient.connect(mongodbURL, (err, database) => {
+			if (err) {
+				return console.log(err)
+			} else {
+				db = database
+				console.log("DB found");
+				trackStocks();
+			}
+		})
+	}
+};
+
 var app = express();
 var db;
 // app.use(express.static(__dirname + "/public"));
@@ -24,14 +38,15 @@ app.use(bodyParser.urlencoded({
 	extended: true
 })); // support encoded bodies
 
-MongoClient.connect(mongodbURL, (err, database) => {
+/*MongoClient.connect(mongodbURL, (err, database) => {
 	if (err) {
 		return console.log(err)
 	} else {
 		db = database
+		console.log("DB found");
 		trackStocks();
 	}
-})
+})*/
 
 function trackStocks() {
 	var end = new Date();
@@ -90,3 +105,5 @@ function trackStocks() {
 		});
 	})
 }
+
+require('make-runnable');

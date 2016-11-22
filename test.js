@@ -1,1 +1,2 @@
-console.log(60.86 < '60.54');
+const stockTracker = require('./bin/stockTracker');
+stockTracker.checkMyThresholds();

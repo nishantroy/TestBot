@@ -5,6 +5,7 @@ const path = require("path");
 const yw = require('weather-yahoo');
 const googleFinance = require("google-finance");
 const MongoClient = require('mongodb').MongoClient;
+const stockTracker = require('./bin/stockTracker')
 var mongodbURL = 'mongodb://nroy:password@ds159517.mlab.com:59517/testbot';
 
 var port = process.env.PORT || 8080;
@@ -86,40 +87,28 @@ app.post('/api/testbot', function(req, res) {
 					'Threshold': threshold
 				};
 				db.collection('tracking').findOneAndUpdate({
-						Stock: symbol
-					}, {
-						$set: toSave
-					}, {
-						upsert: true
-					}, function(err, result) {
-						if (err) {
-							console.log("Error: " + err);
-						} else {
-							request.post('https://api.groupme.com/v3/bots/post', {
-								form: {
-									bot_id: botID,
-									text: "OK! I'll tell you when the price of " + symbol + " is below " + threshold
-								}
-							}, function(err, response) {
-								res.send("Success");
-							});
-						}
-					});
-					// db.collection('tracking').save(toSave, function (err, result) {
-					// 	if (err) {
-					// 		console.log("Error: " + err);
-					// 	} else {
-					// 		request.post('https://api.groupme.com/v3/bots/post', {
-					// 			form: {
-					// 				bot_id: botID,
-					// 				text: "OK! I'll tell you when the price of " + symbol + " is below " + threshold
-					// 			}
-					// 		}, function (err, response) {
-					// 			res.send("Success");
-					// 		});
-					// 	}
-					// })
+					Stock: symbol
+				}, {
+					$set: toSave
+				}, {
+					upsert: true
+				}, function(err, result) {
+					if (err) {
+						console.log("Error: " + err);
+					} else {
+						request.post('https://api.groupme.com/v3/bots/post', {
+							form: {
+								bot_id: botID,
+								text: "OK! I'll tell you when the price of " + symbol + " is below " + threshold
+							}
+						}, function(err, response) {
+							res.send("Success");
+						});
+					}
+				});
 
+			} else if (cmdStock.toLowerCase() == 'check') {
+				stockTracker.checkMyThresholds();
 			} else {
 				var symbol = rest[0].toUpperCase();
 				var from = new Date(rest[1]);
