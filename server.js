@@ -119,7 +119,7 @@ app.post('/api/testbot', function(req, res) {
 					text: text
 				}
 			}, function(err, res) {
-				res.send("Success");
+				// res.send("Success");
 				return;
 			});
 		}
