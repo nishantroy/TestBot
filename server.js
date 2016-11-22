@@ -5,11 +5,6 @@ var path = require("path");
 var yw = require('weather-yahoo');
 var googleFinance = require("google-finance")
 
-
-
-
-
-
 var port = process.env.PORT || 8080;
 var request = require('request');
 
@@ -45,7 +40,7 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching weather for " + loc
 				}
 			}, function(err, response) {
-				// res.send("Success");
+				res.send("Success");
 				// return res.send("Success");
 			});
 
@@ -61,7 +56,7 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, response) {
-					// return res.send("Success");
+					res.send("Success");
 
 				});
 			});
@@ -77,8 +72,8 @@ app.post('/api/testbot', function(req, res) {
 					bot_id: botID,
 					text: "Fetching stock prices for " + symbol
 				}
-			}, function(err, res) {
-				// return res.send("Success");
+			}, function(err, response) {
+				res.send("Success");
 			});
 
 			googleFinance.historical({
@@ -108,7 +103,7 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, response) {
-					// return res.send("Success");
+					res.send("Success");
 				});
 
 			});
