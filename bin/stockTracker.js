@@ -52,7 +52,7 @@ function trackStocks() {
 		var out = '';
 		stockData.forEach(function(stock, index) {
 			var symbol = stock.Stock;
-			var threshold = parseInt(stock.Threshold);
+			var threshold = parseFloat(stock.Threshold);
 			googleFinance.historical({
 				symbol: symbol,
 				from: from,
@@ -61,7 +61,7 @@ function trackStocks() {
 				quotes = quotes[0];
 				console.log("Symbol: " + quotes.symbol + ", price: " + quotes.close + " threshold: " + threshold);
 
-				if (parseInt(quotes.close) < threshold) {
+				if (parseFloat(quotes.close) < threshold) {
 					// if (i < stockData.length - 1) {
 					out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold + '\n';
 					// } else {
