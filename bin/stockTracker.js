@@ -52,7 +52,7 @@ function trackStocks() {
 		var out = '';
 		stockData.forEach(function(stock, index) {
 			var symbol = stock.Stock;
-			var threshold = stock.Threshold;
+			var threshold = parseInt(stock.Threshold);
 			googleFinance.historical({
 				symbol: symbol,
 				from: from,
