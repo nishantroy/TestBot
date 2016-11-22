@@ -96,6 +96,13 @@ app.post('/api/testbot', function(req, res) {
 						} else {
 							out += "On " + qdate + " closing price was: $" + qclose;
 						}
+
+						if (out.length > 1000) {
+							var subtract = out.length % 1000;
+							out = out.substring(0, out.length - (subtract + 4));
+							out += "...";
+							break;
+						}
 					}
 				} else {
 					out = "No data found!";
