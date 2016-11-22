@@ -1,7 +1,7 @@
 var googleFinance = require("google-finance")
 
 var SYMBOL = 'goog';
-var FROM = '2016-11-01';
+var FROM = '2016-11-15';
 var TO = '2016-11-20';
 
 var start = new Date().getTime();
