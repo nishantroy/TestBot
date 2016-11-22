@@ -44,7 +44,7 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching weather for " + loc
 				}
 			}, function(err, res) {
-				return res.send("Success");
+				// return res.send("Success");
 			});
 
 			yw.getSimpleWeather(loc).then(function(res) {
@@ -59,7 +59,7 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, res) {
-					return res.send("Success");
+					// return res.send("Success");
 
 				});
 			});
@@ -76,7 +76,7 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching stock prices for " + symbol
 				}
 			}, function(err, res) {
-				return res.send("Success");
+				// return res.send("Success");
 			});
 
 			googleFinance.historical({
@@ -106,7 +106,7 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, res) {
-					return res.send("Success");
+					// return res.send("Success");
 				});
 
 			});
@@ -119,14 +119,14 @@ app.post('/api/testbot', function(req, res) {
 					text: text
 				}
 			}, function(err, res) {
-				return res.send("Success");
+				// return res.send("Success");
 			});
 		}
 		// res.send("Response in process");
-		//return;
+		return console.log("Responding");
 	} else {
 		// res.send("No response if message is from GroupMe or TestBot");
-		return;
+		return console.log("GroupMe/Bot message received. Ignore.");
 	}
 
 })
