@@ -32,7 +32,7 @@ app.post('/api/testbot', function(req, res) {
 
 	var text = "Hello " + name + "! Nice of you to say " + msg;
 
-	if (name != 'TestBot' && name != 'GroupMe') {
+	if (body.sender_type != 'system' && body.sender_type != 'bot') {
 
 		var cmd = msg.split(" ", 1)[0];
 		if (cmd.toLowerCase() == "weather") {
@@ -44,7 +44,11 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching weather for " + loc
 				}
 			}, function(err, res) {
-				return res;
+				if (error) {
+					return "error: " + err;
+				} else {
+					return res.send("Success");
+				}
 			});
 
 			yw.getSimpleWeather(loc).then(function(res) {
@@ -58,8 +62,12 @@ app.post('/api/testbot', function(req, res) {
 						bot_id: botID,
 						text: out
 					}
-				}, function(err, reason) {
-					return reason;
+				}, function(err, res) {
+					if (err) {
+						return "error: " + err;
+					} else {
+						return res.send("Success");
+					}
 				});
 			});
 
@@ -75,7 +83,11 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching stock prices for " + symbol
 				}
 			}, function(err, res) {
-				return res;
+				if (error) {
+					return "error: " + err;
+				} else {
+					return res.send("Success");
+				}
 			});
 
 			googleFinance.historical({
@@ -105,7 +117,11 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, res) {
-					return res;
+					if (error) {
+						return "error: " + err;
+					} else {
+						return res.send("Success");
+					}
 				});
 
 			});
@@ -118,14 +134,18 @@ app.post('/api/testbot', function(req, res) {
 					text: text
 				}
 			}, function(err, res) {
-				return res;
+				if (error) {
+					return "error: " + err;
+				} else {
+					return res.send("Success");
+				}
 			});
 		}
 		// res.send("Response in process");
 		//return;
 	} else {
 		// res.send("No response if message is from GroupMe or TestBot");
-		return;
+		return "Bot/System message.";
 	}
 
 })
