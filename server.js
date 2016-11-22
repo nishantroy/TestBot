@@ -43,7 +43,7 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching weather for " + loc
 				}
 			}, function(err, res) {
-				console.log(err, res);
+				console.log(err);
 			});
 
 			yw.getSimpleWeather(loc).then(function(res) {
@@ -58,7 +58,7 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, reason) {
-					console.log(err, reason);
+					console.log(err);
 				});
 			});
 
@@ -74,7 +74,7 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching stock prices for " + symbol
 				}
 			}, function(err, res) {
-				console.log(err, res);
+				console.log(err);
 			});
 
 			googleFinance.historical({
@@ -104,7 +104,7 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, res) {
-					console.log(err, res);
+					console.log(err);
 				});
 
 			});
@@ -117,7 +117,7 @@ app.post('/api/testbot', function(req, res) {
 					text: text
 				}
 			}, function(err, res) {
-				console.log(err, res);
+				console.log(err);
 			});
 		}
 		// res.send("Response in process");
