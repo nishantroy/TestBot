@@ -120,6 +120,7 @@ app.post('/api/testbot', function(req, res) {
 				}
 			}, function(err, res) {
 				// return res.send("Success");
+				return;
 			});
 		}
 		// res.send("Response in process");
