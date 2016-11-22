@@ -40,8 +40,8 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching weather for " + loc
 				}
 			}, function(err, response) {
-				res.send("Success");
-				// return res.send("Success");
+				// res.send("Success");
+				return "Success";
 			});
 
 			yw.getSimpleWeather(loc).then(function(result) {
@@ -59,6 +59,7 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, response) {
+					// return response;
 					res.send("Success");
 				});
 			});
@@ -75,7 +76,7 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching stock prices for " + symbol
 				}
 			}, function(err, response) {
-				res.send("Success");
+				return ("Success");
 			});
 
 			googleFinance.historical({
