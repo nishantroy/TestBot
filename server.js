@@ -121,8 +121,8 @@ app.post('/api/testbot', function(req, res) {
 					text: text
 				}
 			}, function(err, response) {
-				response.send("Success");
-				// return;
+				// response.send("Success");
+				return "Done";
 			});
 		}
 		// res.send("Response in process");
