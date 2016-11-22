@@ -1,23 +1,37 @@
 // grab the packages we need
 'use strict';
-var express = require('express');
-var path = require("path");
-var yw = require('weather-yahoo');
-var googleFinance = require("google-finance")
+const express = require('express');
+const path = require("path");
+const yw = require('weather-yahoo');
+const googleFinance = require("google-finance");
+const MongoClient = require('mongodb').MongoClient;
+var mongodbURL = 'mongodb://nroy:password@ds159517.mlab.com:59517/testbot';
 
 var port = process.env.PORT || 8080;
-var request = require('request');
+const request = require('request');
 
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
-var botID = 'c7f81be0af8cbbbce84ecab26d';
+const botID = 'c7f81be0af8cbbbce84ecab26d';
 
 var app = express();
+var db;
 // app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({
 	extended: true
 })); // support encoded bodies
+
+MongoClient.connect(mongodbURL, (err, database) => {
+	if (err) {
+		return console.log(err)
+	} else {
+		db = database
+		app.listen(port, () => {
+			console.log('listening on ' + port);
+		})
+	}
+})
 
 
 app.post('/api/testbot', function(req, res) {
@@ -48,10 +62,7 @@ app.post('/api/testbot', function(req, res) {
 				var weather = result.weather;
 				var date = new Date(result.date.substring(0, result.date.length - 3));
 				date = date.toDateString();
-				var out = "On " + date + ", it is " + weather.condition + " in " 
-				+ loc + ".\n" + "It is " + weather.temperature.value + weather.temperature.units 
-				+ " with a " + weather.wind.value + weather.wind.units + " wind.\n" 
-				+ "With windchill, it is " + weather.windChill.value + weather.windChill.units + ".";
+				var out = "On " + date + ", it is " + weather.condition + " in " + loc + ".\n" + "It is " + weather.temperature.value + weather.temperature.units + " with a " + weather.wind.value + weather.wind.units + " wind.\n" + "With windchill, it is " + weather.windChill.value + weather.windChill.units + ".";
 
 				request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
@@ -66,57 +77,82 @@ app.post('/api/testbot', function(req, res) {
 
 		} else if (cmd.toLowerCase() == 'stock') {
 			var rest = msg.substring(cmd.length).trim().split(" ");
-			var symbol = rest[0].toUpperCase();
-			var from = new Date(rest[1]);
-			var end = new Date();
-
-			request.post('https://api.groupme.com/v3/bots/post', {
-				form: {
-					bot_id: botID,
-					text: "Fetching stock prices for " + symbol
-				}
-			}, function(err, response) {
-				return ("Success");
-			});
-
-			googleFinance.historical({
-				symbol: symbol,
-				from: from,
-				to: end
-			}).then(function(quotes) {
-
-				var out = "";
-				if (quotes.length > 0) {
-					for (var i = 0; i < quotes.length; i++) {
-						var quote = quotes[i];
-						var qdate = new Date(quote.date).toDateString();
-						var qclose = parseFloat(quote.close);
-						if (i != quote.length - 1) {
-							out += "On " + qdate + " closing price was: $" + qclose + "\n";
-						} else {
-							out += "On " + qdate + " closing price was: $" + qclose;
-						}
-
-						if (out.length > 1000) {
-							var subtract = out.length % 1000;
-							out = out.substring(0, out.length - (subtract + 4));
-							out += "...";
-							break;
-						}
+			var cmdStock = rest[0];
+			if (cmdStock.toLowerCase() == 'track') {
+				var symbol = rest[1].toUpperCase();
+				var threshold = parseFloat(rest[2]);
+				var toSave = {
+					'Stock': symbol,
+					'Threshold': threshold
+				};
+				db.collection('tracking').save(toSave, function(err, result) {
+					if (err) {
+						console.log("Error: " + err);
+					} else {
+						request.post('https://api.groupme.com/v3/bots/post', {
+							form: {
+								bot_id: botID,
+								text: "OK! I'll tell you when the price of " + symbol + " is below " + threshold
+							}
+						}, function(err, response) {
+							res.send("Success");
+						});
 					}
-				} else {
-					out = "No data found!";
-				}
+				})
+
+			} else {
+				var symbol = rest[0].toUpperCase();
+				var from = new Date(rest[1]);
+				var end = new Date();
+
 				request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
 						bot_id: botID,
-						text: out
+						text: "Fetching stock prices for " + symbol
 					}
 				}, function(err, response) {
-					res.send("Success");
+					return ("Success");
 				});
 
-			});
+				googleFinance.historical({
+					symbol: symbol,
+					from: from,
+					to: end
+				}).then(function(quotes) {
+
+					var out = "";
+					if (quotes.length > 0) {
+						for (var i = 0; i < quotes.length; i++) {
+							var quote = quotes[i];
+							var qdate = new Date(quote.date).toDateString();
+							var qclose = parseFloat(quote.close);
+							if (i != quote.length - 1) {
+								out += "On " + qdate + " closing price was: $" + qclose + "\n";
+							} else {
+								out += "On " + qdate + " closing price was: $" + qclose;
+							}
+
+							if (out.length > 1000) {
+								var subtract = out.length % 1000;
+								out = out.substring(0, out.length - (subtract + 4));
+								out += "...";
+								break;
+							}
+						}
+					} else {
+						out = "No data found!";
+					}
+					request.post('https://api.groupme.com/v3/bots/post', {
+						form: {
+							bot_id: botID,
+							text: out
+						}
+					}, function(err, response) {
+						res.send("Success");
+					});
+
+				});
+			}
 
 		} else {
 
@@ -139,6 +175,3 @@ app.post('/api/testbot', function(req, res) {
 	}
 
 })
-
-app.listen(port);
-console.log('Server started! At port: ' + port);

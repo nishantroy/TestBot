@@ -5,6 +5,7 @@
     "body-parser": "^1.15.2",
     "express": "~4.10.2",
     "google-finance": "^0.1.7",
+    "mongodb": "^2.2.11",
     "path": "^0.12.7",
     "request": "^2.79.0",
     "weather-yahoo": "^1.0.2",
