@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({
 
 
 app.post('/api/testbot', function(req, res) {
-	console.log("Called now with this body: " + req.body);
+	console.log("Called now with this body: " + JSON.Stringify(req.body));
 	var body = req.body;
 	var name = body.name;
 	var msg = body.text;
@@ -44,7 +44,7 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching weather for " + loc
 				}
 			}, function(err, res) {
-				console.log(err);
+				return res;
 			});
 
 			yw.getSimpleWeather(loc).then(function(res) {
@@ -59,7 +59,7 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, reason) {
-					console.log(err);
+					return reason;
 				});
 			});
 
@@ -75,7 +75,7 @@ app.post('/api/testbot', function(req, res) {
 					text: "Fetching stock prices for " + symbol
 				}
 			}, function(err, res) {
-				console.log(err);
+				return res;
 			});
 
 			googleFinance.historical({
@@ -105,7 +105,7 @@ app.post('/api/testbot', function(req, res) {
 						text: out
 					}
 				}, function(err, res) {
-					console.log(err);
+					return res;
 				});
 
 			});
@@ -118,7 +118,7 @@ app.post('/api/testbot', function(req, res) {
 					text: text
 				}
 			}, function(err, res) {
-				console.log(err);
+				return res;
 			});
 		}
 		// res.send("Response in process");
