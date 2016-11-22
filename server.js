@@ -119,15 +119,16 @@ app.post('/api/testbot', function(req, res) {
 					text: text
 				}
 			}, function(err, res) {
-				// return res.send("Success");
+				res.send("Success");
 				return;
 			});
 		}
 		// res.send("Response in process");
-		return console.log("Responding");
+		// return console.log("Responding");
 	} else {
-		// res.send("No response if message is from GroupMe or TestBot");
-		return console.log("GroupMe/Bot message received. Ignore.");
+		res.send("No response if message is from GroupMe or TestBot");
+		return;
+		// return console.log("GroupMe/Bot message received. Ignore.");
 	}
 
 })
