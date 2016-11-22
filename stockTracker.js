@@ -57,11 +57,11 @@ function trackStocks() {
 			}).then(function(quotes) {
 				quotes = quotes[0];
 				if (quotes.close < threshold) {
-					if (i < stockData.length - 1) {
-						out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold + '\n';
-					} else {
-						out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold;
-					}
+					// if (i < stockData.length - 1) {
+					out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold + '\n';
+					// } else {
+					// 	out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold;
+					// }
 				}
 			})
 		})
