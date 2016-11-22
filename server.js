@@ -17,7 +17,7 @@ var bodyParser = require('body-parser');
 var botID = 'c7f81be0af8cbbbce84ecab26d';
 
 var app = express();
-app.use(express.static(__dirname + "/public"));
+// app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({
 	extended: true
