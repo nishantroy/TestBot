@@ -44,11 +44,14 @@ app.post('/api/testbot', function(req, res) {
 				// return res.send("Success");
 			});
 
-			yw.getSimpleWeather(loc).then(function(res) {
-				var weather = res.weather;
-				var date = new Date(res.date.substring(0, res.date.length - 3));
+			yw.getSimpleWeather(loc).then(function(result) {
+				var weather = result.weather;
+				var date = new Date(result.date.substring(0, result.date.length - 3));
 				date = date.toDateString();
-				var out = "On " + date + ", it is " + weather.condition + " in " + loc + ".\n" + "It is " + weather.temperature.value + weather.temperature.units + " with a " + weather.wind.value + weather.wind.units + " wind.\n" + "With windchill, it is " + weather.windChill.value + weather.windChill.units + ".";
+				var out = "On " + date + ", it is " + weather.condition + " in " 
+				+ loc + ".\n" + "It is " + weather.temperature.value + weather.temperature.units 
+				+ " with a " + weather.wind.value + weather.wind.units + " wind.\n" 
+				+ "With windchill, it is " + weather.windChill.value + weather.windChill.units + ".";
 
 				request.post('https://api.groupme.com/v3/bots/post', {
 					form: {
@@ -57,7 +60,6 @@ app.post('/api/testbot', function(req, res) {
 					}
 				}, function(err, response) {
 					res.send("Success");
-
 				});
 			});
 
