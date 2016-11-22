@@ -85,20 +85,40 @@ app.post('/api/testbot', function(req, res) {
 					'Stock': symbol,
 					'Threshold': threshold
 				};
-				db.collection('tracking').save(toSave, function(err, result) {
-					if (err) {
-						console.log("Error: " + err);
-					} else {
-						request.post('https://api.groupme.com/v3/bots/post', {
-							form: {
-								bot_id: botID,
-								text: "OK! I'll tell you when the price of " + symbol + " is below " + threshold
-							}
-						}, function(err, response) {
-							res.send("Success");
-						});
-					}
-				})
+				db.collection('tracking').findOneAndUpdate({
+						Stock: symbol
+					}, {
+						$set: toSave
+					}, {
+						upsert: true
+					}, function(err, result) {
+						if (err) {
+							console.log("Error: " + err);
+						} else {
+							request.post('https://api.groupme.com/v3/bots/post', {
+								form: {
+									bot_id: botID,
+									text: "OK! I'll tell you when the price of " + symbol + " is below " + threshold
+								}
+							}, function(err, response) {
+								res.send("Success");
+							});
+						}
+					});
+					// db.collection('tracking').save(toSave, function (err, result) {
+					// 	if (err) {
+					// 		console.log("Error: " + err);
+					// 	} else {
+					// 		request.post('https://api.groupme.com/v3/bots/post', {
+					// 			form: {
+					// 				bot_id: botID,
+					// 				text: "OK! I'll tell you when the price of " + symbol + " is below " + threshold
+					// 			}
+					// 		}, function (err, response) {
+					// 			res.send("Success");
+					// 		});
+					// 	}
+					// })
 
 			} else {
 				var symbol = rest[0].toUpperCase();
