@@ -5,6 +5,7 @@
     "async": "^2.1.4",
     "body-parser": "^1.15.2",
     "express": "~4.10.2",
+    "gfinance": "0.0.5",
     "google-finance": "^0.1.7",
     "make-runnable": "^1.0.7",
     "mongodb": "^2.2.11",

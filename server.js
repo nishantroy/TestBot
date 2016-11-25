@@ -4,6 +4,7 @@ const express = require('express');
 const path = require("path");
 const yw = require('weather-yahoo');
 const googleFinance = require("google-finance");
+const gFinance = require('gfinance');
 const MongoClient = require('mongodb').MongoClient;
 const stockTracker = require('./bin/stockTracker')
 var mongodbURL = 'mongodb://nroy:password@ds159517.mlab.com:59517/testbot';
@@ -109,9 +110,9 @@ app.post('/api/testbot', function(req, res) {
 
 			} else if (cmdStock.toLowerCase() == 'check') {
 				stockTracker.checkMyThresholds();
-			} else {
-				var symbol = rest[0].toUpperCase();
-				var from = new Date(rest[1]);
+			} else if (cmdStock.toLowerCase() == 'history') {
+				var symbol = rest[1].toUpperCase();
+				var from = new Date(rest[2]);
 				var end = new Date();
 
 				request.post('https://api.groupme.com/v3/bots/post', {
@@ -161,6 +162,23 @@ app.post('/api/testbot', function(req, res) {
 					});
 
 				});
+			} else {
+				var symbol = rest[1].toUpperCase();
+				gFinance.get([symbol], function(err, res) {
+					console.log(res);
+					if (!err) {
+						var apiResult = res[0];
+						out += 'The price of ' + apiResult.t + ' is ' + apiResult.l;
+					}
+					request.post('https://api.groupme.com/v3/bots/post', {
+						form: {
+							bot_id: botID,
+							text: out
+						}
+					}, function(err, response) {
+						res.send("Success");
+					});
+				})
 			}
 
 		} else {

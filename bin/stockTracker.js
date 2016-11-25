@@ -4,7 +4,8 @@
 'use strict';
 const express = require('express');
 const path = require("path");
-const googleFinance = require("google-finance");
+// const googleFinance = require("google-finance");
+const googleFinance = require("gfinance");
 const MongoClient = require('mongodb').MongoClient;
 var mongodbURL = 'mongodb://nroy:password@ds159517.mlab.com:59517/testbot';
 
@@ -66,7 +67,8 @@ function trackStocks() {
 		async.each(stockData, function(name, callback) {
 			var symbol = name.Stock;
 			var threshold = parseFloat(name.Threshold);
-			googleFinance.historical({
+
+			/*googleFinance.historical({
 				symbol: symbol,
 				from: from,
 				to: end
@@ -83,7 +85,26 @@ function trackStocks() {
 					// }
 				}
 				callback();
-			});
+			});*/
+			var checkLastIndex = 0;
+			googleFinance.get([symbol], function(err, res) {
+				console.log(res);
+				if (!err) {
+					checkLastIndex++;
+					var apiResult = res[0];
+					console.log("Symbol: " + apiResult.t + ", price: " + apiResult.l + " threshold: " + threshold);
+					if (parseFloat(apiResult.l) < threshold) {
+						if (checkLastIndex != stockData.length - 1) {
+							out += 'The price of ' + apiResult.t + ' is ' + apiResult.l + ', below your threshold: ' + threshold + '\n';
+						} else {
+							out += 'The price of ' + apiResult.t + ' is ' + apiResult.l + ', below your threshold: ' + threshold;
+						}
+						console.log("Just added: " + apiResult.t);
+					}
+				}
+				callback();
+			})
+
 		}, function(err) {
 			if (err) {
 				return console.log(err);
