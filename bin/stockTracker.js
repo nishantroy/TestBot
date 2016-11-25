@@ -22,7 +22,7 @@ module.exports = {
 		var date = new Date();
 		var day = date.getDay();
 		var hour = date.getHours();
-		if (day > 0 && day < 6) && (hour > 9 && hour < 17) {
+		if ((day > 0 && day < 6) && (hour > 9 && hour < 17)) {
 			MongoClient.connect(mongodbURL, (err, database) => {
 				if (err) {
 					return console.log(err)
