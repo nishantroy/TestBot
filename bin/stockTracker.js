@@ -21,7 +21,6 @@ module.exports = {
 				return console.log(err)
 			} else {
 				db = database
-				console.log("DB found");
 				trackStocks();
 			}
 		})
@@ -67,24 +66,23 @@ function trackStocks() {
 			var threshold = parseFloat(name.Threshold);
 			var checkLastIndex = 0;
 			googleFinance.get([symbol], function(err, res) {
-				console.log(res);
 				if (!err) {
 					checkLastIndex++;
 					var apiResult = res[0];
-					console.log("Symbol: " + apiResult.t + ", price: " + apiResult.l + " threshold: " + threshold);
+					
 					if (parseFloat(apiResult.l) < threshold) {
 						if (checkLastIndex != stockData.length - 1) {
 							out += 'The price of ' + apiResult.t + ' is ' + apiResult.l + ', below your threshold: ' + threshold + '\n';
 						} else {
 							out += 'The price of ' + apiResult.t + ' is ' + apiResult.l + ', below your threshold: ' + threshold;
 						}
-						console.log("Just added: " + apiResult.t);
+					
 					}
 				}
 				callback();
 			})
 
-		}, function(err) {
+		}, function (err) {
 			if (err) {
 				return console.log(err);
 			} else {
@@ -97,9 +95,9 @@ function trackStocks() {
 						bot_id: botID,
 						text: out
 					}
-				}, function(err, response) {
-					// res.send("Success");
-					return "Success";
+				}, function (err, response) {
+					res.send("Success");
+					// return "Success";
 				});
 			}
 		});

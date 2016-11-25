@@ -176,7 +176,7 @@ app.post('/api/testbot', function(req, res) {
 							bot_id: botID,
 							text: out
 						}
-					}, function (err, response) {
+					}, function(err, response) {
 						res.send("Success");
 					});
 				})
@@ -203,5 +203,3 @@ app.post('/api/testbot', function(req, res) {
 	}
 
 })
-
-
