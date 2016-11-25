@@ -1,6 +1,3 @@
-#!/bin/env node
-
-
 'use strict';
 const express = require('express');
 const path = require("path");
@@ -19,22 +16,16 @@ const async = require('async');
 
 module.exports = {
 	checkMyThresholds: function() {
-		var date = new Date();
-		var day = date.getDay();
-		var hour = date.getHours();
-		if ((day > 0 && day < 6) && (hour > 9 && hour < 17)) {
-			MongoClient.connect(mongodbURL, (err, database) => {
-				if (err) {
-					return console.log(err)
-				} else {
-					db = database
-					console.log("DB found");
-					trackStocks();
-				}
-			})
-		} else {
-			console.log("It's not time for that!");
-		}
+		MongoClient.connect(mongodbURL, (err, database) => {
+			if (err) {
+				return console.log(err)
+			} else {
+				db = database
+				console.log("DB found");
+				trackStocks();
+			}
+		})
+
 	}
 };
 
@@ -74,25 +65,6 @@ function trackStocks() {
 		async.each(stockData, function(name, callback) {
 			var symbol = name.Stock;
 			var threshold = parseFloat(name.Threshold);
-
-			/*googleFinance.historical({
-				symbol: symbol,
-				from: from,
-				to: end
-			}).then(function(quotes) {
-				quotes = quotes[0];
-				console.log("Symbol: " + quotes.symbol + ", price: " + quotes.close + " threshold: " + threshold);
-
-				if (parseFloat(quotes.close) < threshold) {
-					// if (i < stockData.length - 1) {
-					out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold + '\n';
-					console.log("Just added: " + quotes.symbol);
-					// } else {
-					// 	out += 'The price of ' + quotes.symbol + ' is ' + quotes.close + ', below your threshold: ' + threshold;
-					// }
-				}
-				callback();
-			});*/
 			var checkLastIndex = 0;
 			googleFinance.get([symbol], function(err, res) {
 				console.log(res);
