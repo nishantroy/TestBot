@@ -96,8 +96,8 @@ function trackStocks() {
 						text: out
 					}
 				}, function (err, response) {
-					res.send("Success");
-					// return "Success";
+					// res.send("Success");
+					return "Success";
 				});
 			}
 		});

@@ -110,6 +110,7 @@ app.post('/api/testbot', function(req, res) {
 
 			} else if (cmdStock.toLowerCase() == 'check') {
 				stockTracker.checkMyThresholds();
+				res.send("Success!");
 			} else if (cmdStock.toLowerCase() == 'history') {
 				var symbol = rest[1].toUpperCase();
 				var from = new Date(rest[2]);
