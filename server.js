@@ -165,10 +165,10 @@ app.post('/api/testbot', function(req, res) {
 			} else {
 				var symbol = rest[0].toUpperCase();
 				var out = "";
-				gFinance.get([symbol], function(err, res) {
-					console.log(res);
+				gFinance.get([symbol], function(err, apires) {
+
 					if (!err) {
-						var apiResult = res[0];
+						var apiResult = apires[0];
 						out += 'The price of ' + apiResult.t + ' is ' + apiResult.l;
 					}
 					request.post('https://api.groupme.com/v3/bots/post', {
@@ -176,7 +176,7 @@ app.post('/api/testbot', function(req, res) {
 							bot_id: botID,
 							text: out
 						}
-					}, function(err, response) {
+					}, function (err, response) {
 						res.send("Success");
 					});
 				})
@@ -203,3 +203,5 @@ app.post('/api/testbot', function(req, res) {
 	}
 
 })
+
+
