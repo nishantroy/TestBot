@@ -164,6 +164,7 @@ app.post('/api/testbot', function(req, res) {
 				});
 			} else {
 				var symbol = rest[0].toUpperCase();
+				var out = "";
 				gFinance.get([symbol], function(err, res) {
 					console.log(res);
 					if (!err) {
