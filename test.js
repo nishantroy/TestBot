@@ -1,2 +1,2 @@
-const stockTracker = require('./bin/stockTracker');
-stockTracker.checkMyThresholds();
+var date = new Date();
+console.log(date);
