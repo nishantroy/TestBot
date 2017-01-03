@@ -160,7 +160,7 @@ app.post('/api/testbot', function(req, res) {
                     if (err) {
                         console.log("Error: " + err);
                     } else {
-                        console.log(result);
+                        console.log("Result:" + result);
                         request.post('https://api.groupme.com/v3/bots/post', {
                             form: {
                                 bot_id: botID,
