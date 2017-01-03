@@ -160,11 +160,12 @@ app.post('/api/testbot', function(req, res) {
                     if (err) {
                         console.log("Error: " + err);
                     } else {
+                        console.log(result);
                         request.post('https://api.groupme.com/v3/bots/post', {
                             form: {
                                 bot_id: botID,
                                 text: "OK! I'll tell you when you make at least $" + max
-                                + " or lose no more than $" + min
+                                + " or lose no more than $" + min + " on " + symbol
                             }
                         }, function(err, response) {
                             res.send("Success");
