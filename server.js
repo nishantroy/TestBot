@@ -142,7 +142,36 @@ app.post('/api/testbot', function(req, res) {
                     }
                 });
 
-			} else if (cmdStock.toLowerCase() == 'history') {
+			} else if (cmdStock.toLowerCase() == 'sell') {
+                symbol = rest[1].toUpperCase();
+                var max = parseFloat(rest[2]);
+                var min = parseFloat(rest[3]);
+                toSave = {
+                    'Maximum': max,
+                    'Minimum': min
+                };
+                db.collection('bought').findOneAndUpdate({
+                    Stock: symbol
+                }, {
+                    $set: toSave
+                }, {
+                    upsert: false
+                }, function(err, result) {
+                    if (err) {
+                        console.log("Error: " + err);
+                    } else {
+                        request.post('https://api.groupme.com/v3/bots/post', {
+                            form: {
+                                bot_id: botID,
+                                text: "OK! I'll tell you when you make at least $" + max
+                                + " or lose no more than $" + min
+                            }
+                        }, function(err, response) {
+                            res.send("Success");
+                        });
+                    }
+                });
+            } else if (cmdStock.toLowerCase() == 'history') {
 				var symbol = rest[1].toUpperCase();
 				var from = new Date(rest[2]);
 				var end = new Date();
