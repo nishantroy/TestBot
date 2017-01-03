@@ -33,7 +33,7 @@ MongoClient.connect(mongodbURL, (err, database) => {
 			console.log('listening on ' + port);
 		})
 	}
-})
+});
 
 
 app.post('/api/testbot', function(req, res) {
@@ -111,6 +111,19 @@ app.post('/api/testbot', function(req, res) {
 			} else if (cmdStock.toLowerCase() == 'check') {
 				stockTracker.checkMyThresholds();
 				res.send("Success!");
+			} else if (cmdStock.toLowerCase() == 'bought') {
+				var symbol = rest[1].toUpperCase();
+                var quantity = parseFloat(rest[2]);
+                var price = parseFloat(rest[3]);
+                request.post('https://api.groupme.com/v3/bots/post', {
+                    form: {
+                        bot_id: botID,
+                        text: "OK! You bought " + quantity + " units of " + symbol + " at $" + price
+                    }
+                }, function(err, response) {
+                    res.send("Success");
+                });
+
 			} else if (cmdStock.toLowerCase() == 'history') {
 				var symbol = rest[1].toUpperCase();
 				var from = new Date(rest[2]);
@@ -203,4 +216,4 @@ app.post('/api/testbot', function(req, res) {
 		// return console.log("GroupMe/Bot message received. Ignore.");
 	}
 
-})
+});
