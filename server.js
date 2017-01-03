@@ -160,17 +160,26 @@ app.post('/api/testbot', function(req, res) {
                     if (err) {
                         console.log("Error: " + err);
                     } else {
-                        console.log("Result:" + result.value);
-                        console.log(result);
-                        request.post('https://api.groupme.com/v3/bots/post', {
-                            form: {
-                                bot_id: botID,
-                                text: "OK! I'll tell you when you make at least $" + max
-                                + " or lose no more than $" + min + " on " + symbol
-                            }
-                        }, function(err, response) {
-                            res.send("Success");
-                        });
+                        if (result.value != null) {
+                            request.post('https://api.groupme.com/v3/bots/post', {
+                                form: {
+                                    bot_id: botID,
+                                    text: "OK! I'll tell you when you make at least $" + max
+                                    + " or lose no more than $" + min + " on " + symbol
+                                }
+                            }, function (err, response) {
+                                res.send("Success");
+                            });
+                        } else {
+                            request.post('https://api.groupme.com/v3/bots/post', {
+                                form: {
+                                    bot_id: botID,
+                                    text: "First tell me how much of " + symbol + " you bought and for how much!"
+                                }
+                            }, function (err, response) {
+                                res.send("Success");
+                            });
+                        }
                     }
                 });
             } else if (cmdStock.toLowerCase() == 'history') {
