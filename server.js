@@ -6,7 +6,7 @@ const yw = require('weather-yahoo');
 const googleFinance = require("google-finance");
 const gFinance = require('gfinance');
 const MongoClient = require('mongodb').MongoClient;
-const stockTracker = require('./bin/stockTracker')
+const stockTracker = require('./bin/stockTracker');
 var mongodbURL = 'mongodb://nroy:password@ds159517.mlab.com:59517/testbot';
 
 var port = process.env.PORT || 8080;
@@ -28,7 +28,7 @@ MongoClient.connect(mongodbURL, (err, database) => {
 	if (err) {
 		return console.log(err)
 	} else {
-		db = database
+		db = database;
 		app.listen(port, () => {
 			console.log('listening on ' + port);
 		})
@@ -77,7 +77,8 @@ app.post('/api/testbot', function(req, res) {
 				});
 			});
 
-		} else if (cmd.toLowerCase() == 'stock') {
+		}
+		else if (cmd.toLowerCase() == 'stock') {
 			var rest = msg.substring(cmd.length).trim().split(" ");
 			var cmdStock = rest[0];
 			if (cmdStock.toLowerCase() == 'track') {
@@ -112,16 +113,33 @@ app.post('/api/testbot', function(req, res) {
 				stockTracker.checkMyThresholds();
 				res.send("Success!");
 			} else if (cmdStock.toLowerCase() == 'bought') {
-				var symbol = rest[1].toUpperCase();
+				symbol = rest[1].toUpperCase();
                 var quantity = parseFloat(rest[2]);
                 var price = parseFloat(rest[3]);
-                request.post('https://api.groupme.com/v3/bots/post', {
-                    form: {
-                        bot_id: botID,
-                        text: "OK! You bought " + quantity + " units of " + symbol + " at $" + price
+                toSave = {
+                    'Stock': symbol,
+                    'Quantity': quantity,
+                    'Price': price
+                };
+                db.collection('bought').findOneAndUpdate({
+                    Stock: symbol
+                }, {
+                    $set: toSave
+                }, {
+                    upsert: true
+                }, function(err, result) {
+                    if (err) {
+                        console.log("Error: " + err);
+                    } else {
+                        request.post('https://api.groupme.com/v3/bots/post', {
+                            form: {
+                                bot_id: botID,
+                                text: "OK! You bought " + quantity + " units of " + symbol + " at $" + price
+                            }
+                        }, function(err, response) {
+                            res.send("Success");
+                        });
                     }
-                }, function(err, response) {
-                    res.send("Success");
                 });
 
 			} else if (cmdStock.toLowerCase() == 'history') {
