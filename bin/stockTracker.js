@@ -20,11 +20,21 @@ module.exports = {
 			if (err) {
 				return console.log(err)
 			} else {
-				db = database
+				db = database;
 				trackStocks();
 			}
 		})
 
+	},
+	checkMyPurchases: function () {
+		MongoClient.connect(mongodbURL, (err, database) => {
+			if (err) {
+				return console.log(err)
+			} else {
+				db = database;
+				trackSellStocks();
+			}
+		})
 	}
 };
 
@@ -47,15 +57,15 @@ app.use(bodyParser.urlencoded({
 })*/
 
 function trackStocks() {
-	var end = new Date();
-	var day = end.getDay();
-	if (day == 0) {
-		end.setDate(end.getDate() - 2);
-	} else if (day == 6) {
-		end.setDate(end.getDate() - 1);
-	}
-	var from = new Date(end);
-	from.setDate(from.getDate() - 1);
+	// var end = new Date();
+	// var day = end.getDay();
+	// if (day == 0) {
+	// 	end.setDate(end.getDate() - 2);
+	// } else if (day == 6) {
+	// 	end.setDate(end.getDate() - 1);
+	// }
+	// var from = new Date(end);
+	// from.setDate(from.getDate() - 1);
 
 	var cursor = db.collection('tracking').find().toArray(function(err, results) {
 		var stockData = results;
@@ -103,6 +113,66 @@ function trackStocks() {
 		});
 	})
 }
+
+function trackSellStocks() {
+
+	var cursor = db.collection('bought').find().toArray(function(err, results) {
+		var stockData = results;
+		var out = '';
+
+		async.each(stockData, function(name, callback) {
+			var symbol = name.Stock;
+			var max = parseFloat(name.Maximum);
+			var min = parseFloat(name.Minimum);
+			var cost = parseFloat(name.Price);
+			var quant = parseFloat(name.Quantity);
+			var checkLastIndex = 0;
+			googleFinance.get([symbol], function(err, res) {
+				if (!err) {
+					checkLastIndex++;
+					var apiResult = res[0];
+					var product = quant * parseFloat(apiResult.l);
+
+					if (product <= min) {
+						if (checkLastIndex != stockData.length - 1) {
+							out += 'Loss from ' + apiResult.t + ' is ' + product + ', and you wanted: ' + min + '\n';
+						} else {
+							out += 'Loss from ' + apiResult.t + ' is ' + product + ', and you wanted: ' + min;
+						}
+					} else if (product >= max) {
+						if (checkLastIndex != stockData.length - 1) {
+							out += 'Profit from ' + apiResult.t + ' is ' + product + ', and you wanted: ' + max + '\n';
+						} else {
+							out += 'Profit from ' + apiResult.t + ' is ' + product + ', and you wanted: ' + max;
+						}
+					}
+
+				}
+				callback();
+			})
+
+		}, function (err) {
+			if (err) {
+				return console.log(err);
+			} else {
+				if (out.length == 0) {
+					out = 'None of your purchased stocks are at the profit/loss levels you asked for yet!';
+				}
+
+				request.post('https://api.groupme.com/v3/bots/post', {
+					form: {
+						bot_id: botID,
+						text: out
+					}
+				}, function (err, response) {
+					// res.send("Success");
+					return "Success";
+				});
+			}
+		});
+	})
+}
+
 
 
 

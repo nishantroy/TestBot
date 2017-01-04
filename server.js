@@ -112,6 +112,9 @@ app.post('/api/testbot', function (req, res) {
             } else if (cmdStock.toLowerCase() == 'check') {
                 stockTracker.checkMyThresholds();
                 res.send("Success!");
+            } else if (cmdStock.toLowerCase() == 'check bought') {
+                stockTracker.checkMyPurchases();
+                res.send("Success!");
             } else if (cmdStock.toLowerCase() == 'bought') {
                 symbol = rest[1].toUpperCase();
                 var quantity = parseFloat(rest[2]);
