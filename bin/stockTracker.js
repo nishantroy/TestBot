@@ -131,15 +131,15 @@ function trackSellStocks() {
 				if (!err) {
 					checkLastIndex++;
 					var apiResult = res[0];
-					var product = quant * parseFloat(apiResult.l);
+					var net = quant * (parseFloat(apiResult.l) - cost);
 
-					if (product <= min) {
+					if (net <= (min * -1)) {
 						if (checkLastIndex != stockData.length - 1) {
 							out += 'Loss from ' + apiResult.t + ' is ' + product + ', and you wanted: ' + min + '\n';
 						} else {
 							out += 'Loss from ' + apiResult.t + ' is ' + product + ', and you wanted: ' + min;
 						}
-					} else if (product >= max) {
+					} else if (net >= max) {
 						if (checkLastIndex != stockData.length - 1) {
 							out += 'Profit from ' + apiResult.t + ' is ' + product + ', and you wanted: ' + max + '\n';
 						} else {
