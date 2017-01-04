@@ -112,7 +112,7 @@ app.post('/api/testbot', function (req, res) {
             } else if (cmdStock.toLowerCase() == 'check') {
                 stockTracker.checkMyThresholds();
                 res.send("Success!");
-            } else if (cmdStock.toLowerCase() == 'check bought') {
+            } else if (cmdStock.toLowerCase() == 'sellcheck') {
                 stockTracker.checkMyPurchases();
                 res.send("Success!");
             } else if (cmdStock.toLowerCase() == 'bought') {
