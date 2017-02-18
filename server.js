@@ -126,7 +126,7 @@ app.post('/api/testbot', function (req, res) {
                     request.post('https://api.groupme.com/v3/bots/post', {
                         form: {
                             bot_id: botID,
-                            text: "OK! Deleted " + symbol + "from your bought stocks list!"
+                            text: "OK! Deleted " + symbol + " from your bought stocks list!"
                         }
                     }, function (err, response) {
                         res.send("Success");
