@@ -88,17 +88,18 @@ function trackStocks() {
 			} else {
 				if (out.length == 0) {
 					out = 'None of your stocks are below your set thresholds yet!';
-				}
+				} else {
 
-				request.post('https://api.groupme.com/v3/bots/post', {
-					form: {
-						bot_id: botID,
-						text: out
-					}
-				}, function (err, response) {
-					// res.send("Success");
-					return "Success";
-				});
+					request.post('https://api.groupme.com/v3/bots/post', {
+						form: {
+							bot_id: botID,
+							text: out
+						}
+					}, function (err, response) {
+						// res.send("Success");
+						return "Success";
+					});
+				}
 			}
 		});
 	})
@@ -147,17 +148,18 @@ function trackSellStocks() {
 			} else {
 				if (out.length == 0) {
 					out = 'None of your purchased stocks are at the profit/loss levels you asked for yet!';
-				}
+				} else {
 
-				request.post('https://api.groupme.com/v3/bots/post', {
-					form: {
-						bot_id: botID,
-						text: out
-					}
-				}, function (err, response) {
-					// res.send("Success");
-					return "Success";
-				});
+					request.post('https://api.groupme.com/v3/bots/post', {
+						form: {
+							bot_id: botID,
+							text: out
+						}
+					}, function (err, response) {
+						// res.send("Success");
+						return "Success";
+					});
+				}
 			}
 		});
 	})
