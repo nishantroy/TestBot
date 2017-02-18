@@ -57,17 +57,7 @@ app.use(bodyParser.urlencoded({
 })*/
 
 function trackStocks() {
-	// var end = new Date();
-	// var day = end.getDay();
-	// if (day == 0) {
-	// 	end.setDate(end.getDate() - 2);
-	// } else if (day == 6) {
-	// 	end.setDate(end.getDate() - 1);
-	// }
-	// var from = new Date(end);
-	// from.setDate(from.getDate() - 1);
-
-	var cursor = db.collection('tracking').find().toArray(function(err, results) {
+	db.collection('tracking').find().toArray(function(err, results) {
 		var stockData = results;
 		var out = '';
 

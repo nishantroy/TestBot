@@ -115,6 +115,33 @@ app.post('/api/testbot', function (req, res) {
             } else if (cmdStock.toLowerCase() == 'sellcheck') {
                 stockTracker.checkMyPurchases();
                 res.send("Success!");
+            } else if (cmdStock.toLowerCase() == 'remove') {
+                symbol = rest[1].toUpperCase();
+                var doc = db.collection('bought').findOneAndDelete({
+                    'Stock': symbol
+                });
+
+
+                if (doc) {
+                    request.post('https://api.groupme.com/v3/bots/post', {
+                        form: {
+                            bot_id: botID,
+                            text: "OK! Deleted " + symbol + "from your bought stocks list!"
+                        }
+                    }, function (err, response) {
+                        res.send("Success");
+                    });
+                } else {
+                    request.post('https://api.groupme.com/v3/bots/post', {
+                        form: {
+                            bot_id: botID,
+                            text: "You never bought " + symbol + "!"
+                        }
+                    }, function (err, response) {
+                        res.send("Success");
+                    });
+                }
+
             } else if (cmdStock.toLowerCase() == 'bought') {
                 symbol = rest[1].toUpperCase();
                 var quantity = parseFloat(rest[2]);
